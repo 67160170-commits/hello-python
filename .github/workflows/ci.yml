@@ -3,6 +3,8 @@ name: CI/CD
 on:
   push:
     branches: [main]
+  pull_request: # ใหม่: รันตอนเปิดหรืออัปเดต PR
+    branches: [main] # ใหม่: เฉพาะ PR ที่จะ merge เข้า main
   workflow_dispatch:
 
 permissions:
@@ -27,9 +29,10 @@ jobs:
       - name: Test
         run: pytest --cov=grades --cov=build_site --cov-report=term-missing --cov-fail-under=80
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
+    deploy:
+      needs: test
+      if: github.event_name != 'pull_request' # ใหม่: PR ไม่ deploy
+      runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
