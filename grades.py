@@ -17,3 +17,10 @@ def average(scores):
     if not scores:
         raise ValueError("ต้องมีคะแนนอย่างน้อย 1 ค่า")
     return round(sum(scores) / len(scores), 2)
+
+def pass_rate(scores):
+    """เปอร์เซ็นต์คนที่ได้ 50 คะแนนขึ้นไป"""
+    if not scores:
+        return 0.0
+    passed = [s for s in scores if s >= 50]
+    return round(len(passed) / len(scores) * 100, 2)
