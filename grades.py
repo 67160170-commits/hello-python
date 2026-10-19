@@ -4,8 +4,12 @@ def grade(score):
         raise ValueError("คะแนนต้องอยู่ระหว่าง 0-100")
     if score >= 80:
         return "A"
+    if score >= 75:
+        return "B+"
     if score >= 70:
         return "B"
+    if score >= 65:
+        return "C+"
     if score >= 60:
         return "C"
     if score >= 50:
