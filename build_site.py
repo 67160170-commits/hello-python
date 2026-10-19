@@ -10,7 +10,14 @@ OUTPUT_DIR = Path("_site")
 def load_scores(csv_path):
     """อ่านไฟล์ CSV คืนค่าเป็น list ของ (ชื่อ, คะแนน)"""
     with open(csv_path, encoding="utf-8") as f:
-        return [(row["name"], int(row["score"])) for row in csv.DictReader(f)]
+        rows = [(row["name"], int(row["score"])) for row in csv.DictReader(f)]
+
+    names = [name.strip() for name, _ in rows]
+    if any(not name for name in names):
+        raise ValueError("ชื่อห้ามว่าง")
+    if len(names) != len(set(names)):
+        raise ValueError("ชื่อซ้ำในไฟล์คะแนน")
+    return rows
 
 def render_html(rows, title):
     """สร้างหน้าเว็บ HTML จากข้อมูลคะแนน"""

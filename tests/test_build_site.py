@@ -1,3 +1,5 @@
+import pytest
+
 from build_site import load_scores, main, render_html
 
 
@@ -5,6 +7,23 @@ def test_load_scores(tmp_path):
     csv_file = tmp_path / "scores.csv"
     csv_file.write_text("name,score\nเอ,90\nบี,40\n", encoding="utf-8")
     assert load_scores(csv_file) == [("เอ", 90), ("บี", 40)]
+
+
+@pytest.mark.parametrize(
+    ("csv_content", "error_message"),
+    [
+        ("name,score\n,90\n", "ชื่อห้ามว่าง"),
+        ("name,score\nเอ,90\nเอ,80\n", "ชื่อซ้ำ"),
+    ],
+)
+def test_load_scores_rejects_empty_or_duplicate_names(
+    tmp_path, csv_content, error_message
+):
+    csv_file = tmp_path / "scores.csv"
+    csv_file.write_text(csv_content, encoding="utf-8")
+
+    with pytest.raises(ValueError, match=error_message):
+        load_scores(csv_file)
 
 
 def test_render_html_has_title_and_rows():
