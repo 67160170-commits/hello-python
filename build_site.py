@@ -3,7 +3,7 @@ import html
 import os
 from pathlib import Path
 
-from grades import grade
+from grades import grade, pass_rate
 
 OUTPUT_DIR = Path("_site")
 
@@ -20,6 +20,9 @@ def render_html(rows, title):
     )
     scores = [score for _, score in rows]
     avg = sum(scores) / len(scores) if scores else 0
+    highest_score = max(scores) if scores else 0
+    lowest_score = min(scores) if scores else 0
+    passing_rate = pass_rate(scores)
 
     return f"""<!DOCTYPE html>
 <html lang="th">
@@ -31,6 +34,9 @@ def render_html(rows, title):
 {table_rows}
 </table>
 <p>ค่าเฉลี่ย: {avg:.2f}</p>
+<p>คะแนนสูงสุด: {highest_score}</p>
+<p>คะแนนต่ำสุด: {lowest_score}</p>
+<p>อัตราผ่าน: {passing_rate:.2f}%</p>
 </body>
 </html>
 """

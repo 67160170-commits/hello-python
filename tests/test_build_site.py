@@ -13,6 +13,9 @@ def test_render_html_has_title_and_rows():
     assert "<td>สมชาย</td><td>85</td><td>A</td>" in page
     assert "<td>ปิติ</td><td>48</td><td>F</td>" in page
     assert "ค่าเฉลี่ย: 66.5" in page
+    assert "คะแนนสูงสุด: 85" in page
+    assert "คะแนนต่ำสุด: 48" in page
+    assert "อัตราผ่าน: 50.00%" in page
 
 
 def test_render_html_escapes_names():
