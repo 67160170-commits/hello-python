@@ -15,12 +15,16 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: ${{ matrix.python-version }}
           cache: pip
           cache-dependency-path: requirements-dev.txt
 
@@ -48,7 +52,16 @@ jobs:
           python-version: "3.13"
 
       - name: Build site
+        env:
+          SITE_TITLE: ${{ vars.SITE_TITLE }}
         run: python build_site.py
+
+      - name: Check secret
+        env:
+          API_KEY: ${{ secrets.DEMO_API_KEY }}
+        run: |
+          echo "secret value: $API_KEY"
+          python -c "import os; print('API_KEY length:', len(os.environ['API_KEY']))"
 
       - uses: actions/configure-pages@v5
 
